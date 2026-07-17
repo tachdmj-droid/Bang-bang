@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Result Sheet</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+  .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+  input { width: 45%; padding: 8px; margin: 5px; border: 1px solid #ccc; }
+  button { background: #006633; color: white; border: none; padding: 10px 20px; cursor: pointer; width: 100%; margin-top: 10px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+</style>
+</head>
+<body>
+
+<div class="container" id="pdfArea">
+  <h3>Result Generator (2026)</h3>
+  <input type="text" id="name" placeholder="Name">
+  <input type="text" id="roll" placeholder="Roll No">
+  <input type="text" id="gpa" placeholder="GPA">
+  
+  <p><strong>Subject Grades:</strong></p>
+  <div id="subjectInputs">
+    <!-- আপনি এখানে যেকোনো সাবজেক্টের নাম ও গ্রেড লিখে দিতে পারবেন -->
+    <input type="text" class="subName" value="Bengali"> <input type="text" class="subGrade" placeholder="Grade">
+    <input type="text" class="subName" value="English"> <input type="text" class="subGrade" placeholder="Grade">
+    <input type="text" class="subName" value="Mathematics"> <input type="text" class="subGrade" placeholder="Grade">
+  </div>
+  
+  <button onclick="generate()">Generate & Download PDF</button>
+
+  <div id="resultOutput" style="margin-top:20px; display:none;">
+    <h2 id="outName"></h2>
+    <p>Roll: <span id="outRoll"></span> | GPA: <span id="outGpa"></span></p>
+    <table id="resultTable">
+      <tr><th>Subject</th><th>Grade</th></tr>
+    </table>
+    <p>Authored by: Junied Hossain</p>
+  </div>
+</div>
+
+<script>
+function generate() {
+  document.getElementById('outName').innerText = document.getElementById('name').value;
+  document.getElementById('outRoll').innerText = document.getElementById('roll').value;
+  document.getElementById('outGpa').innerText = document.getElementById('gpa').value;
+  
+  let table = document.getElementById('resultTable');
+  table.innerHTML = '<tr><th>Subject</th><th>Grade</th></tr>';
+  
+  let names = document.getElementsByClassName('subName');
+  let grades = document.getElementsByClassName('subGrade');
+  
+  for(let i=0; i<names.length; i++) {
+    let row = table.insertRow();
+    row.innerHTML = `<td>${names[i].value}</td><td>${grades[i].value}</td>`;
+  }
+  
+  document.getElementById('resultOutput').style.display = 'block';
+  html2pdf().from(document.getElementById('pdfArea')).save('Result_2026.pdf');
+}
+</script>
+</body>
+</html>
